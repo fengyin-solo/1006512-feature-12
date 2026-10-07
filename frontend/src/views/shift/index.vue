@@ -24,6 +24,20 @@
       </span>
     </p>
 
+    <section class="todo-panel">
+      <h3>交接待办（清水池归属判定回写）</h3>
+      <ul class="todo-list">
+        <li v-for="todo in todos" :key="todo.id" class="todo-item" :class="{ done: todo.done }">
+          <span class="todo-time">{{ todo.time }}</span>
+          <span class="todo-source">{{ todo.source }}</span>
+          <span class="todo-content">{{ todo.content }}</span>
+          <button v-if="!todo.done" class="link" type="button" @click="completeTodo(todo.id)">办结</button>
+          <span v-else class="badge owner">已办</span>
+        </li>
+        <li v-if="!todos.length" class="empty-state">暂无待办：清水池的归属判定会自动回写到这里</li>
+      </ul>
+    </section>
+
     <form class="filter-bar" @submit.prevent="reload">
       <label v-for="field in filterFields" :key="field" class="filter-item">
         <span>{{ field }}</span>
@@ -79,7 +93,8 @@ import {
   moduleMeta,
   runAction as applyAction,
 } from '@/api/local-service'
-import type { EntryRow } from '@/data/types'
+import { completeHandoverTodo, listHandoverTodos } from '@/data/handover-store'
+import type { EntryRow, HandoverTodo } from '@/data/types'
 
 const meta = moduleMeta('shift')
 const columns = ["交接编号", "值班班组", "班次", "交班人员", "接班人员", "交接事项", "交接时间", "交接状态"]
@@ -91,6 +106,7 @@ const rows = ref<EntryRow[]>([])
 const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
+const todos = ref<HandoverTodo[]>([])
 const filterFields = columns.slice(0, 3)
 const statusSummary = computed(() =>
   statuses.map((status: string) => ({
@@ -128,9 +144,15 @@ function reload() {
     const payload = listEntries(meta.key, filters.value)
     rows.value = payload.items
     total.value = payload.total
+    todos.value = listHandoverTodos()
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : '值班交接班列表读取失败'
   }
+}
+
+function completeTodo(id: number) {
+  completeHandoverTodo(id)
+  todos.value = listHandoverTodos()
 }
 
 onMounted(reload)

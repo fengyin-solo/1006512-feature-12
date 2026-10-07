@@ -68,4 +68,8 @@ npm run build
 - 字段、状态、动作与流转目标集中在 `frontend/src/data/modules.ts`；示例数据在
   `frontend/src/data/seed.ts`。
 - 状态流转只允许在 `local-service.ts` 里改，页面组件不做业务判断。
+- 清水池调蓄另有专属服务层 `frontend/src/api/clearwell-service.ts`：每条记录只认登记它的运行班组，
+  有效容积、当前水位、进出水流量只由本班经手；越权与满池改动一律退回并写入退回经手记录，
+  归属判定回写值班交接待办（`frontend/src/data/handover-store.ts`）；水位下限与调度下发的
+  数字打架时以调度下发为准，列表页与详情面板读同一份规范化数据。
 - 想回到初始数据：清掉浏览器里 `waterworks-ops:entries` 这一项，或调用 `resetModule(模块)`。

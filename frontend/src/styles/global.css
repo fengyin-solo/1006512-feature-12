@@ -35,3 +35,48 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+
+/* 班组切换与页面提示 */
+.team-select { margin-left: 4px; border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; }
+.page-banner { margin: 0 0 10px; font-size: 13px; }
+.success-text { color: #067647; }
+.warning-text { color: #b54708; font-size: 12px; }
+.muted-text { color: var(--muted); font-size: 12px; margin: 2px 0 0; }
+
+/* 清水池：列表 + 详情面板同读一份数据 */
+.layout-split { display: flex; gap: 12px; align-items: flex-start; }
+.layout-main { flex: 1; min-width: 0; overflow-x: auto; }
+.data-table tr.selected td { background: #eff6ff; }
+.data-table tbody tr { cursor: pointer; }
+.detail-panel { width: 360px; flex-shrink: 0; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.detail-panel h3 { margin: 0 0 10px; font-size: 14px; }
+.detail-panel h4 { margin: 14px 0 6px; font-size: 13px; }
+.detail-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13px; }
+.detail-grid dt { color: var(--muted); }
+.detail-grid dd { margin: 0; }
+.badge { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 12px; background: #eef2f7; }
+.badge.owner { background: #dcfae6; color: #067647; }
+.badge.foreign { background: #fef0c7; color: #b54708; }
+.badge.locked { background: #fee4e2; color: #b42318; }
+.edit-form { display: flex; flex-direction: column; gap: 8px; }
+.edit-form label { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
+.edit-form input { border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 13px; }
+
+/* 退回经手记录与交接待办 */
+.rejection-panel { margin-top: 14px; }
+.rejection-panel h3 { font-size: 14px; margin: 0 0 8px; }
+.rejection-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.todo-panel { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; }
+.todo-panel h3 { font-size: 14px; margin: 0 0 8px; }
+.todo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.todo-item { display: flex; gap: 10px; align-items: center; }
+.todo-item.done .todo-content { color: var(--muted); }
+.todo-time { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.todo-source { background: #eef2f7; border-radius: 999px; padding: 1px 8px; font-size: 12px; white-space: nowrap; }
+.todo-content { flex: 1; }
+
+/* 登记弹窗 */
+.modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; z-index: 10; }
+.modal-card { background: #fff; border-radius: 8px; padding: 16px 18px; width: 420px; }
+.modal-card h3 { margin: 0 0 10px; font-size: 15px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 12px; }
