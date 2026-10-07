@@ -67,6 +67,51 @@
       <span>共 {{ total }} 条值班交接班记录</span>
       <span v-if="errorMessage" class="error-text">{{ errorMessage }}</span>
     </footer>
+
+    <section class="todo-section">
+      <h3>值班交接待办（清水池归属判定回写）</h3>
+      <p class="page-desc">
+        别的班组申请改动非本班组清水池被退回时，归属判定动作回写到这里，承办给池体所属运行班组。
+        当前运行班组：{{ session.crew }}
+      </p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>回写时间</th>
+            <th>池体编号</th>
+            <th>事项</th>
+            <th>来源班组</th>
+            <th>承办班组</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="todo in todos" :key="todo.id" :class="{ 'todo-mine': todo.承办班组 === session.crew && todo.状态 === '待承办' }">
+            <td>{{ todo.time }}</td>
+            <td>{{ todo.池体编号 }}</td>
+            <td>{{ todo.事项 }}</td>
+            <td>{{ todo.来源班组 }}</td>
+            <td>{{ todo.承办班组 }}</td>
+            <td>{{ todo.状态 }}</td>
+            <td>
+              <button
+                v-if="todo.状态 === '待承办' && todo.承办班组 === session.crew"
+                class="link"
+                type="button"
+                @click="finishTodo(todo.id)"
+              >
+                交接办结
+              </button>
+              <span v-else class="muted-text">—</span>
+            </td>
+          </tr>
+          <tr v-if="!todos.length">
+            <td colspan="7" class="empty-state">暂无归属判定待办</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </section>
 </template>
 
@@ -76,12 +121,16 @@ import { computed, onMounted, ref } from 'vue'
 import {
   downloadEntries,
   listEntries,
+  listShiftTodos,
   moduleMeta,
+  resolveShiftTodo,
   runAction as applyAction,
 } from '@/api/local-service'
-import type { EntryRow } from '@/data/types'
+import { useSessionStore } from '@/stores/session'
+import type { EntryRow, ShiftTodo } from '@/data/types'
 
 const meta = moduleMeta('shift')
+const session = useSessionStore()
 const columns = ["交接编号", "值班班组", "班次", "交班人员", "接班人员", "交接事项", "交接时间", "交接状态"]
 const actions = ["发起交接", "确认交接", "登记遗留"]
 const statuses = ["待交接", "交接中", "已交接", "有遗留"]
@@ -122,6 +171,19 @@ function runAction(action: string, row: EntryRow) {
   reload()
 }
 
+const todos = ref<ShiftTodo[]>([])
+
+function reloadTodos() {
+  // 值班交接页看全量待办，哪个班组承办一目了然；办结只给承办本班。
+  todos.value = listShiftTodos()
+}
+
+function finishTodo(id: number) {
+  const result = resolveShiftTodo(id)
+  errorMessage.value = result.ok ? '' : result.message
+  reloadTodos()
+}
+
 function reload() {
   errorMessage.value = ''
   try {
@@ -131,7 +193,11 @@ function reload() {
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : '值班交接班列表读取失败'
   }
+  reloadTodos()
 }
 
-onMounted(reload)
+onMounted(() => {
+  reload()
+  reloadTodos()
+})
 </script>

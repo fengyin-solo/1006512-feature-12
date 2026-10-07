@@ -82,7 +82,7 @@ import {
 import type { EntryRow } from '@/data/types'
 
 const meta = moduleMeta('dispatch')
-const columns = ["调度编号", "调度时段", "目标供水量", "实际供水量", "调度方式", "调度人员", "下达时间", "调度状态"]
+const columns = ["调度编号", "适用池体", "调度时段", "目标供水量", "下发水位下限", "实际供水量", "调度方式", "调度人员", "下达时间"]
 const actions = ["下达指令", "确认完成", "调整指令"]
 const statuses = ["待下达", "执行中", "已完成", "已调整"]
 const stats = [{"label": "待下达指令", "value": 0}, {"label": "执行中指令", "value": 0}, {"label": "当日供水量", "value": 0}]
